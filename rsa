@@ -1,0 +1,56 @@
+import sys
+
+
+def is_prime(n):
+    if n <= 1:
+        return False
+    if n <= 3:
+        return True
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+
+    i = 5
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
+            return False
+        i += 6
+
+    return True
+
+
+def factorize(number):
+    factors = []
+    for i in range(2, int(number ** 0.5) + 1):
+        if number % i == 0 and is_prime(i) and is_prime(number // i):
+            factors.append((i, number // i))
+    return factors
+
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: factors <file>")
+        return
+
+    filename = sys.argv[1]
+
+    try:
+        with open(filename, "r") as file:
+            number = int(file.read().strip())
+    except IOError:
+        print(f"Error: Failed to read the file '{filename}'")
+        return
+    except ValueError:
+        print(f"Invalid number in the file '{filename}'")
+        return
+
+    if number <= 1:
+        print("Invalid number: The number must be greater than 1")
+        return
+
+    factorizations = factorize(number)
+    for factorization in factorizations:
+        print(f"{number}={factorization[0]}*{factorization[1]}")
+
+if __name__ == "__main__":
+    main()
+
